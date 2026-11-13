@@ -27,9 +27,11 @@ page_start('Thank You · ' . couple(), 'page-thanks');
             <?php if ($families = config('event.families', [])): ?>
             <div class="families">
                 <p class="families-intro">Together with our families,</p>
-                <?php foreach ($families as $f): ?>
-                <p class="family"><?= e($f) ?></p>
-                <?php endforeach; ?>
+                <div class="family-list">
+                    <?php foreach ($families as $f): ?>
+                    <p class="family"><?= e($f) ?></p>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <?php endif; ?>
 

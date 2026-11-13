@@ -3,7 +3,7 @@
 A small mobile-first PHP + MySQL web app. Guests open a link (or scan a QR code), and then:
 
 1. **Welcome**: "Warm Welcome to the Engagement Ceremony of Prathyusha & Vignesh" → **Share your Wishes**
-2. **Share Your Wishes**: take a photo with the phone camera or upload one, enter their name, and write a wish (up to 500 characters).
+2. **Share Your Wishes**: upload a photo from the phone gallery and crop it to a square, enter their name, and write a wish (up to 500 characters).
 3. **Thank You**: "Your Wishes Made Our Day Special!", with the families, the date and the city.
 
 The couple reads every wish (with photos) at **`/admin.php`**, behind a password. From there they can download them all as a CSV or delete any wish.
@@ -49,8 +49,8 @@ location ~ \.php$ { include fastcgi_params; fastcgi_param SCRIPT_FILENAME $docum
 ```
 
 ## How photos are handled
-- The browser shrinks big phone photos to 1600px before uploading, so they send fast on mobile data.
-- The server checks that each file really is an image. It then re-encodes it as a JPEG with GD, which strips location (GPS) data and fixes rotation, and saves it under a random name in `public/uploads/`.
+- Guests pick a photo from their gallery (any size), then crop it to a square: drag to move, pinch or use the slider to zoom. The browser compresses the crop to a 1080 × 1080 JPEG, so only a small file (about 100–300 KB) is uploaded.
+- The server checks that each file really is an image. It then centre-crops it to a square (as a fallback), re-encodes it as a JPEG with GD, which strips location (GPS) data and fixes rotation, and saves it under a random name in `public/uploads/`.
 - Uploads are capped at 10 MB (`max_upload_mb` in the config). `.user.ini` and `.htaccess` raise PHP's default 2 MB limit.
 
 ## Security

@@ -34,9 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $photo = null;
-        // The photo can arrive from either the "Take Photo" or the "Upload Photo" input.
         $upload = null;
-        foreach (['photo', 'photo_camera'] as $field) {
+        foreach (['photo'] as $field) {
             if (isset($_FILES[$field]) && is_int($_FILES[$field]['error']) && $_FILES[$field]['error'] !== UPLOAD_ERR_NO_FILE) {
                 $upload = $_FILES[$field];
                 break;
@@ -80,7 +79,7 @@ page_start('Share Your Wishes · ' . couple(), 'page-form');
         <?= divider('swirl', 'divider-tight') ?>
         <h1 class="title">Share Your Wishes</h1>
         <?= divider('swirl', 'divider-tight') ?>
-        <p class="lead">Capture a photo or upload one, add your name, and share your heartfelt wishes with the couple.</p>
+        <p class="lead">Upload a photo from your gallery, add your name, and share your heartfelt wishes with the couple.</p>
 
         <?php if ($errors): ?>
         <div class="alert" role="alert">
@@ -104,22 +103,18 @@ page_start('Share Your Wishes · ' . couple(), 'page-form');
                         <circle cx="52" cy="44" r="10" fill="#c81d63"/>
                         <path d="M52 39v10M47 44h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
                     </svg>
-                    <p class="photo-label">Take a Photo or Upload a Photo</p>
+                    <p class="photo-label">Upload a Photo from your Gallery</p>
                 </div>
                 <div class="photo-preview" hidden>
                     <img id="photoPreview" alt="Your selected photo">
+                    <button type="button" class="photo-recrop" id="photoRecrop">Adjust crop</button>
                     <button type="button" class="photo-remove" id="photoRemove" aria-label="Remove photo">&times;</button>
                 </div>
                 <div class="photo-actions">
-                    <label class="btn btn-outline">
-                        <input type="file" name="photo_camera" accept="image/*" capture="user" class="visually-hidden" data-photo-input>
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.5-2h5L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
-                        <span>Take Photo</span>
-                    </label>
-                    <label class="btn btn-outline">
-                        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" class="visually-hidden" data-photo-input>
+                    <label class="btn btn-outline btn-upload">
+                        <input type="file" name="photo" accept="image/*" class="visually-hidden" id="photoInput">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 17l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="16" cy="9" r="1.7" fill="currentColor"/></svg>
-                        <span>Upload Photo</span>
+                        <span class="upload-text">Upload Photo</span>
                     </label>
                 </div>
             </div>
@@ -148,5 +143,24 @@ page_start('Share Your Wishes · ' . couple(), 'page-form');
                 <span class="btn-text">Submit Your Wishes</span>
             </button>
         </form>
+
+        <div class="cropper" id="cropper" role="dialog" aria-modal="true" aria-labelledby="cropTitle" hidden>
+            <div class="cropper-panel">
+                <h2 id="cropTitle" class="cropper-title">Crop your photo</h2>
+                <p class="cropper-hint">Drag to move · pinch or use the slider to zoom</p>
+                <div class="cropper-stage" id="cropStage">
+                    <img id="cropImg" alt="" draggable="false">
+                </div>
+                <label class="cropper-zoom">
+                    <span aria-hidden="true">−</span>
+                    <input type="range" id="cropZoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom">
+                    <span aria-hidden="true">+</span>
+                </label>
+                <div class="cropper-actions">
+                    <button type="button" class="btn btn-outline" id="cropCancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="cropDone">Crop &amp; Use</button>
+                </div>
+            </div>
+        </div>
 <?php
 page_end(true);

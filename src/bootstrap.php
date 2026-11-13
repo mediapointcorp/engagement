@@ -138,23 +138,25 @@ function store_photo(array $file): string
         }
     }
 
+    // Always store a square photo: centre-crop (the browser normally sends it already
+    // cropped by the guest), then shrink to at most 1080 x 1080.
     $w = imagesx($src);
     $h = imagesy($src);
-    $max = 1600;
-    $scale = min(1, $max / max($w, $h));
-    $nw = max(1, (int) round($w * $scale));
-    $nh = max(1, (int) round($h * $scale));
+    $side = min($w, $h);
+    $sx = intdiv($w - $side, 2);
+    $sy = intdiv($h - $side, 2);
+    $out = min(1080, $side);
 
-    $dst = imagecreatetruecolor($nw, $nh);
+    $dst = imagecreatetruecolor($out, $out);
     imagefill($dst, 0, 0, imagecolorallocate($dst, 255, 255, 255)); // flatten transparency onto white
-    imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
+    imagecopyresampled($dst, $src, 0, 0, $sx, $sy, $out, $out, $side, $side);
     imagedestroy($src);
 
     if (!is_dir(UPLOAD_DIR)) {
         mkdir(UPLOAD_DIR, 0755, true);
     }
     $name = date('Ymd-His') . '-' . bin2hex(random_bytes(8)) . '.jpg';
-    if (!imagejpeg($dst, UPLOAD_DIR . '/' . $name, 85)) {
+    if (!imagejpeg($dst, UPLOAD_DIR . '/' . $name, 82)) {
         imagedestroy($dst);
         throw new RuntimeException('We could not save your photo. Please try again.');
     }
