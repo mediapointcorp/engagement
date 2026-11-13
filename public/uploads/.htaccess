@@ -1,0 +1,6 @@
+# Only serve images from this folder; never execute scripts.
+Options -Indexes -ExecCGI
+php_flag engine off
+<FilesMatch "\.(?!(jpe?g)$)[^.]+$">
+    Require all denied
+</FilesMatch>
