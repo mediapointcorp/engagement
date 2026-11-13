@@ -2,7 +2,10 @@
 declare(strict_types=1);
 
 define('APP_ROOT', dirname(__DIR__));
-define('UPLOAD_DIR', APP_ROOT . '/public/uploads');
+// The web-root folder (named "public" here, often "public_html" on hosting).
+// Every page lives directly in it, so the running script's folder is the web root.
+define('PUBLIC_DIR', dirname(realpath($_SERVER['SCRIPT_FILENAME'] ?? '') ?: APP_ROOT . '/public/index.php'));
+define('UPLOAD_DIR', PUBLIC_DIR . '/uploads');
 
 $configFile = APP_ROOT . '/config.php';
 if (!is_file($configFile)) {

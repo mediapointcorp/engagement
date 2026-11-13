@@ -14,24 +14,13 @@ The couple reads every wish (with photos) at **`/admin.php`**, behind a password
 - Apache (the `.htaccess` files are included) or Nginx (see below)
 
 ## Setup
-```bash
-# 1. Database
-mysql -u root -p < schema.sql
-mysql -u root -p -e "CREATE USER 'engagement_user'@'localhost' IDENTIFIED BY 'a-strong-password';
-                     GRANT SELECT, INSERT, DELETE ON engagement.* TO 'engagement_user'@'localhost';"
-
-# 2. Config
-cp config.sample.php config.php    # then set your DB password, admin password and event details
-
-# 3. The uploads folder must be writable by the web server
-chmod 775 public/uploads           # or: chown www-data public/uploads
-```
-Point the web server's **document root at `public/`**, so that `config.php` and `src/` can't be reached from the web.
-
-On shared hosting (cPanel and similar), upload everything, then either set the domain's document root to `public/`, or put the contents of `public/` in `public_html/` and the other files one level above it.
+See **DEPLOY.md** for step-by-step instructions (shared hosting such as Hostinger/cPanel, or your own server).
 
 Local test run:
 ```bash
+mysql -u root -p -e "CREATE DATABASE engagement CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u root -p engagement < schema.sql
+cp config.sample.php config.php    # set DB details + admin password
 php -S localhost:8080 -t public
 ```
 

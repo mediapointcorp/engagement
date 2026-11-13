@@ -1,6 +1,8 @@
-# Only serve images from this folder; never execute scripts.
-Options -Indexes -ExecCGI
-php_flag engine off
+# Only serve JPG images from this folder; never run scripts.
+Options -Indexes
 <FilesMatch "\.(?!(jpe?g)$)[^.]+$">
     Require all denied
 </FilesMatch>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>

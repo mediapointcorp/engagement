@@ -1,6 +1,10 @@
--- Run once:  mysql -u root -p < schema.sql
-CREATE DATABASE IF NOT EXISTS engagement CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE engagement;
+-- Creates the table the app needs.
+--
+-- Shared hosting (cPanel / Hostinger): first create the database in the control panel,
+-- then open phpMyAdmin, select that database, and Import this file.
+--
+-- Your own server:  mysql -u root -p -e "CREATE DATABASE engagement CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+--                   mysql -u root -p engagement < schema.sql
 
 CREATE TABLE IF NOT EXISTS wishes (
     id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -12,7 +16,3 @@ CREATE TABLE IF NOT EXISTS wishes (
     created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Optional: a dedicated user for the app (change the password!)
--- CREATE USER 'engagement_user'@'localhost' IDENTIFIED BY 'change-me';
--- GRANT SELECT, INSERT, DELETE ON engagement.* TO 'engagement_user'@'localhost';
