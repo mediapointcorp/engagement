@@ -1,0 +1,22 @@
+# Used when the whole repository is deployed into the web root
+# (e.g. Hostinger Git deployment into public_html).
+# It serves the app from public/ and blocks everything else.
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Never expose source code, config, git data or docs
+    RewriteRule ^(\.git|src)(/|$) - [F,L,NC]
+    RewriteRule ^(config(\.sample)?\.php|schema\.sql|[^/]*\.md|\.gitignore|\.user\.ini)$ - [F,L,NC]
+
+    # Everything else is served from public/
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Fallback if mod_rewrite is missing: at least protect the config
+<Files "config.php">
+    Require all denied
+</Files>

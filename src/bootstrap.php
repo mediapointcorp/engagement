@@ -7,10 +7,18 @@ define('APP_ROOT', dirname(__DIR__));
 define('PUBLIC_DIR', dirname(realpath($_SERVER['SCRIPT_FILENAME'] ?? '') ?: APP_ROOT . '/public/index.php'));
 define('UPLOAD_DIR', PUBLIC_DIR . '/uploads');
 
-$configFile = APP_ROOT . '/config.php';
-if (!is_file($configFile)) {
+// config.php may sit in the app folder, or one level above it (safest when the
+// whole repo is deployed into public_html, e.g. Hostinger Git deployment).
+$configFile = null;
+foreach ([APP_ROOT . '/config.php', dirname(APP_ROOT) . '/config.php'] as $candidate) {
+    if (is_file($candidate)) {
+        $configFile = $candidate;
+        break;
+    }
+}
+if ($configFile === null) {
     http_response_code(500);
-    exit('Missing config.php — copy config.sample.php to config.php and fill in your database details.');
+    exit('Missing config.php. Copy config.sample.php to config.php (in the app folder or the folder above it) and fill in your database details.');
 }
 $CONFIG = require $configFile;
 

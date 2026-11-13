@@ -1,5 +1,81 @@
 # Deploying the Engagement Wishes app
 
+## ⭐ Hostinger hPanel with Git auto-deploy (recommended)
+
+The whole repository is cloned into `public_html`. The root `.htaccess` serves the app from
+`public/` and blocks `src/`, `.git`, `schema.sql`, the docs and the config from the web.
+
+### 1. Database (one time)
+1. Go to **hPanel → Websites → Manage → Databases → Management**.
+2. Create a database and a user. Note the full names, e.g. `u123456789_engagement` and `u123456789_wishes`, and the password.
+3. Click **Enter phpMyAdmin** for that database, then **Import** → choose `schema.sql` → **Go**. A `wishes` table appears.
+
+### 2. PHP settings (one time)
+Go to **Advanced → PHP Configuration**:
+- **PHP version**: 8.2 or 8.3
+- **PHP extensions**: make sure `gd`, `exif`, `pdo_mysql` and `mbstring` are ticked
+- **PHP options**: `upload_max_filesize` 12M or more and `post_max_size` 14M or more (Hostinger's defaults are usually higher already)
+
+### 3. Empty `public_html`
+Hostinger can only deploy into an **empty** folder. Open **Files → File Manager**, go to
+`public_html`, and delete the default `default.php` / `index.html` and anything else there.
+
+### 4. Connect GitHub
+Go to **Advanced → Git**.
+
+The repository is **private**, so first give Hostinger read access:
+1. In hPanel, find the **SSH key** on the Git page and click **Copy**.
+2. On GitHub, open the repository, then **Settings → Deploy keys → Add deploy key**.
+3. Paste the key, give it a title such as `Hostinger`, leave *Allow write access* **off**, and click **Add key**.
+
+Then fill in **Create a New Repository** in hPanel:
+- **Repository**: `git@github.com:mediapointcorp/engagement.git`
+- **Branch**: `claude/festive-ptolemy-231cyj` (or `main` once the work is merged there)
+- **Directory**: leave **empty** to deploy to `public_html`
+
+Click **Create**, then **Deploy**.
+
+### 5. Auto deployment (deploy on every push)
+1. On the same Git page, under **Manage Repositories**, click **Auto Deployment** and **copy the Webhook URL**.
+2. On GitHub, go to **Settings → Webhooks → Add webhook**.
+3. **Payload URL**: paste the URL. Leave the other fields as they are ("Just the push event"), then click **Add webhook**.
+
+From now on, every push to that branch updates the site automatically.
+
+### 6. Create `config.php`, outside `public_html`
+In **File Manager**, go **one level up** from `public_html`, to the folder that contains
+`public_html` (e.g. `domains/yourdomain.com/`). Create a new file named **`config.php`** there,
+and paste the contents of `config.sample.php` into it. Then fill in:
+
+```php
+'db' => [
+    'host'     => 'localhost',
+    'port'     => 3306,
+    'name'     => 'u123456789_engagement',
+    'user'     => 'u123456789_wishes',
+    'password' => 'your-db-password',
+],
+'admin_password' => 'a-long-private-password',
+```
+
+Because it lives outside `public_html`, deployments never touch it and nobody can reach it
+from the web. The app looks for `config.php` there automatically.
+
+### 7. HTTPS
+Go to **Security → SSL**, install the free SSL certificate, and switch on **Force HTTPS**.
+
+### 8. Test on your phone
+1. Open `https://yourdomain.com`, then tap **Share your Wishes**. Upload and crop a photo, enter a name and wish, and submit. You should reach the Thank You page.
+2. Open `https://yourdomain.com/admin.php`, log in, check that the wish and photo appear, and delete the test.
+3. Make a QR code for `https://yourdomain.com` for the guests.
+
+Guest photos are stored in `public_html/public/uploads/`. Git ignores that folder, so
+redeploying never deletes them.
+
+---
+
+## Other hosts
+
 You need **web hosting with PHP 8.1+ and MySQL**, plus a domain or subdomain
 (e.g. `wishes.yourdomain.com`). Any ordinary shared host works: Hostinger, BigRock,
 GoDaddy, Bluehost, or any cPanel host.
@@ -150,12 +226,12 @@ sudo apt install -y certbot python3-certbot-apache && sudo certbot --apache -d w
 
 | Problem | Fix |
 |---|---|
-| "Missing config.php" | `config.php` is not in the folder **above** the web root, next to `src/`. |
+| "Missing config.php" | Put `config.php` in the app folder (next to `src/`) or in the folder directly above it. |
 | "500 Internal Server Error" | Check the PHP version (8.1+). Then check the error log in the control panel. |
 | "Something went wrong while saving" | Wrong database name, user or password in `config.php` (remember the prefix), or `schema.sql` was not imported. |
 | Photo upload fails | Set the `uploads` folder permission to 755 or 775. Make sure the **gd** extension is enabled. |
 | Admin page says "Incorrect password" | You must change `admin_password` from the sample value. |
 
 ## After the event
-Log in to `/admin.php` and click **Download CSV**. Then download the `public_html/uploads`
-folder from File Manager (right-click → Compress → download the zip) to keep all the photos.
+Log in to `/admin.php` and click **Download CSV**. Then download the uploads folder
+(`public_html/public/uploads` with Git deploy, otherwise `public_html/uploads`) from File Manager (right-click → Compress → download the zip) to keep all the photos.
