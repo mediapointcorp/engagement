@@ -349,17 +349,20 @@ a { color: var(--maroon); }
 .thanks-text { font-size: clamp(15px, calc(var(--w) * .036), 20px); line-height: 1.5; margin: 14px 0; }
 .with-love { font-style: italic; font-size: clamp(16px, calc(var(--w) * .04), 22px); margin: 14px 0 0; }
 .families {
-  margin: 14px calc(var(--w) * -.035) 0;
-  padding: 14px 8px;
+  margin: 14px calc(var(--w) * -.04) 0;
+  padding: 14px 6px;
   border-radius: 18px;
   background: linear-gradient(#fbe7ea, #f8e1e4);
   border: 1px solid #ecc9cd;
 }
-.family-list { display: flex; flex-wrap: wrap; justify-content: center; column-gap: .9em; row-gap: 2px; }
-.family-list .family { flex: 0 0 auto; white-space: nowrap; }
-.family-list .family:nth-child(odd):last-child { flex-basis: 100%; } /* odd one out sits centred on its own row */
+.family-list { /* two couples side by side; the last (odd) name centred below */
+  display: grid; grid-template-columns: auto auto; justify-content: center;
+  column-gap: .9em; row-gap: 2px;
+}
+.family-list .family { white-space: nowrap; }
+.family-list .family:nth-child(odd):last-child { grid-column: 1 / -1; }
 .families-intro { font-style: italic; margin: 0 0 4px; font-size: clamp(14px, calc(var(--w) * .036), 19px); }
-.family { margin: 2px 0; font-weight: 700; color: var(--maroon); font-size: clamp(13.5px, calc(var(--w) * .037), 22px); }
+.family { margin: 2px 0; font-weight: 700; color: var(--maroon); font-size: clamp(11.5px, calc(var(--w) * .037), 22px); }
 .event-meta { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; font-weight: 700; font-size: clamp(15px, calc(var(--w) * .038), 21px); margin: 16px 0 10px; }
 .event-meta svg { width: 1.3em; height: 1.3em; color: var(--maroon); }
 .event-meta .sep { width: 1px; height: 1.1em; background: #8b7a72; }
