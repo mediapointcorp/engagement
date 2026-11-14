@@ -15,7 +15,7 @@ function page_start(string $title, string $pageClass = ''): void
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&family=Playfair+Display:ital,wght@1,600;1,700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/app.css?v=3">
+<link rel="stylesheet" href="assets/css/app.css?v=4">
 </head>
 <body class="<?= e($pageClass) ?>">
 <div class="page">
@@ -33,11 +33,12 @@ function page_end(bool $withScript = false): void
 {
     ?>
     </main>
-    <footer class="ground" aria-hidden="true">
+    <div class="ground" aria-hidden="true">
         <img class="decor decor-bl" src="assets/bottom-left.png" alt="">
         <img class="decor decor-br" src="assets/bottom-right.png" alt="">
         <img class="ground-rings" src="assets/rings.png" alt="">
-    </footer>
+    </div>
+    <?= powered_by() ?>
 </div>
 <?php if ($withScript): ?>
 <script src="assets/js/app.js?v=2" defer></script>
@@ -45,6 +46,12 @@ function page_end(bool $withScript = false): void
 </body>
 </html>
 <?php
+}
+
+/** "Powered by Playtown" credit shown at the bottom of every page. */
+function powered_by(): string
+{
+    return '<footer class="credit">Powered by <a href="https://playtown.co.in/" target="_blank" rel="noopener">Playtown</a></footer>';
 }
 
 /** Gold ornamental divider. $variant: 'swirl' | 'lotus' | 'plain' */

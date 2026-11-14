@@ -83,6 +83,20 @@ a { color: var(--maroon); }
 .decor-br { bottom: 0; right: 0; width: calc(var(--w) * .41); }
 .ground-rings { display: none; }
 
+/* ---------- "Powered by" credit ---------- */
+.credit {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 8px 16px calc(10px + env(safe-area-inset-bottom));
+  font-size: 13px; letter-spacing: .02em;
+  color: #7a6a64;
+  background: linear-gradient(rgba(246, 235, 225, 0), var(--cream-2) 40%);
+  margin-top: -6px;
+}
+.credit a { color: var(--maroon); font-weight: 700; text-decoration: none; border-bottom: 1px solid rgba(140, 22, 69, .35); }
+.credit a:hover, .credit a:focus-visible { border-bottom-color: var(--maroon); }
+.admin .credit { background: none; padding-bottom: 24px; }
+
 /* ---------- typography ---------- */
 .divider { display: block; color: var(--gold); width: calc(var(--w) * .28); height: auto; margin: 0 auto; }
 .divider-top { margin-top: calc(var(--w) * .1); width: calc(var(--w) * .30); }
