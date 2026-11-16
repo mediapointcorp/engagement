@@ -17,6 +17,11 @@ return [
     // Use a long, private password. Wishes are only visible after logging in.
     'admin_password' => 'change-this-admin-password',
 
+    // ---- Wishes album PDF (/album.php) ----
+    // Leave empty: anyone with the link yourdomain.com/album.php can download the album.
+    // Set a value (e.g. 'k8Hq2xLm'): the link becomes yourdomain.com/album.php?key=k8Hq2xLm
+    'album_key' => '',
+
     // ---- Event details shown in the app ----
     'event' => [
         'bride'    => 'Prathyusha',

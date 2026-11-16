@@ -69,6 +69,8 @@ Go to **Security → SSL**, install the free SSL certificate, and switch on **Fo
 2. Open `https://yourdomain.com/admin.php`, log in, check that the wish and photo appear, and delete the test.
 3. Make a QR code for `https://yourdomain.com` for the guests.
 
+**Wishes album:** open `https://yourdomain.com/album.php` and the PDF album downloads automatically.
+
 Guest photos are stored in `public_html/public/uploads/`. Git ignores that folder, so
 redeploying never deletes them.
 

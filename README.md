@@ -8,6 +8,22 @@ A small mobile-first PHP + MySQL web app. Guests open a link (or scan a QR code)
 
 The couple reads every wish (with photos) at **`/admin.php`**, behind a password. From there they can download them all as a CSV or delete any wish.
 
+## Wishes Album (PDF)
+Open **`/album.php`** (for example `https://yourdomain.com/album.php`). The page builds an A4 PDF
+album of every wish and **downloads it automatically**:
+- **Front cover**: Ganesha, garlands, the couple's names, the date and city, a fan of guest
+  photos, and the number of wishes.
+- **Wish pages**: up to 3 wishes per page, each with the guest's photo (or their initial if they
+  sent no photo), their wish, name and date, plus page numbers. The last page ends with
+  "With Best Wishes".
+- **Back cover**: a thank-you note, the families, the date and city, and "Powered by Playtown",
+  which is a clickable link in the PDF.
+
+`/album.php?preview=1` shows the pages on screen with a **Download PDF** button.
+Any language works (Tamil, Telugu, Hindi, emoji), because the browser draws the pages.
+To keep the link private, set `album_key` in `config.php`. The link then becomes
+`/album.php?key=YOUR-KEY`.
+
 ## Requirements
 - PHP 8.1+ with the `pdo_mysql` and `gd` extensions (`exif` is optional; it fixes photo rotation)
 - MySQL 5.7+ or MariaDB 10.3+
